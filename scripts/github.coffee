@@ -17,6 +17,13 @@ AORI_MONKU = ["今日は草生やしてないっすけど良いんすか？ｗ�
 
 module.exports = (robot) ->
 
+  new cron('0 0 22 * * *', () -> 
+    dateFrom = moment().startOf('day')
+    dateTo = moment().endOf('day')
+    for user, value of GITHUB_USERS
+      checkUserCommits(user)
+  ).start()
+
   robot.respond /github checkCommits (.*)/i, (msg) ->
     user = msg.match[1]
     dateFrom = moment().startOf('day')
