@@ -27,16 +27,30 @@ AORI_MONKU = ["今日は草生やしてないっすけど良いんすか？ｗ�
 module.exports = (robot) ->
 
   new cron('0 0 22 * * *', () ->
-    dateFrom = moment().startOf('day')
-    dateTo = moment().endOf('day')
+    refTime = {hour: 4}
+    now = moment()
+    if now.isAfter(moment(refTime))
+      dateFrom = moment(refTime)
+      dateTo = moment(refTime).add(1, 'days')
+    else
+      dateFrom = moment(refTime).subtract(1, 'days')
+      dateTo = moment(refTime)
     for user, value of GITHUB_USERS
       checkUserCommits(user)
   ).start()
 
   robot.respond /github checkCommits (.*)/i, (msg) ->
     user = msg.match[1]
-    dateFrom = moment().startOf('day')
-    dateTo = moment().endOf('day')
+
+    refTime = {hour: 4}
+    now = moment()
+    if now.isAfter(moment(refTime))
+      dateFrom = moment(refTime)
+      dateTo = moment(refTime).add(1, 'days')
+    else
+      dateFrom = moment(refTime).subtract(1, 'days')
+      dateTo = moment(refTime)
+
     checkUserCommits(user, dateFrom, dateTo)
 
   # 指定された期間内にコミットイベント（プッシュイベントがない場合は煽る）
@@ -53,7 +67,7 @@ module.exports = (robot) ->
         unless event.type == "PushEvent"
           continue
         createAt = moment(event.created_at)
-        unless dateFrom.IsAfter(createAt) and dateTo.IsBefore(createAt)
+        unless dateFrom.isAfter(createAt) and dateTo.isBefore(createAt)
           continue
         commitCount++
       if commitCount > 0
