@@ -66,7 +66,7 @@ module.exports = (robot) ->
       robot.send TARGET_ROOM, message
 
   existsBetweenRefDateRange =(createAt, referenceDateFrom, referenceDateTo) ->
-  return referenceDateFrom.isBefore(createAt) and referenceDateTo.isAfter(createAt)
+    return referenceDateFrom.isBefore(createAt) and referenceDateTo.isAfter(createAt)
 
   getAoriReferenceDate = (checkingDate, configuredReferenceTime = AORI_REF_TIME) ->
     if checkingDate.isAfter(moment(configuredReferenceTime))
